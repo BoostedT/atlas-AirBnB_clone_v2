@@ -30,7 +30,7 @@ class TestConsole(unittest.TestCase):
             # Create a user first
             HBNBCommand().onecmd("create User")
             user_id = f.getvalue().strip()
-            
+
             # Try to show the created user
             f.seek(0)
             f.truncate(0)
@@ -51,14 +51,14 @@ class TestConsole(unittest.TestCase):
             # Create a user first
             HBNBCommand().onecmd("create User")
             user_id = f.getvalue().strip()
-            
+
             # Destroy the created user
             f.seek(0)
             f.truncate(0)
             HBNBCommand().onecmd(f"destroy User {user_id}")
             output = f.getvalue().strip()
             self.assertEqual(output, "")
-            
+
             # Try to show the destroyed user
             f.seek(0)
             f.truncate(0)
