@@ -8,6 +8,10 @@ class BaseModel:
     """A base class for all hbnb models"""
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
+        id = Column(String(60), nullable=False, primary_key=True, unique=True)
+        created_at = Column(DATETIME, nullable=False, default=datetime.now())
+        updated_at = Column(DATETIME, nullable=False, default=datetime.now())
+        
         if not kwargs:
             from models import storage
             self.id = str(uuid.uuid4())
