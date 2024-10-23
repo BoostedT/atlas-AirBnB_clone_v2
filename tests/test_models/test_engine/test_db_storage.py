@@ -8,13 +8,6 @@ from datetime import datetime
 from models import storage
 from models.user import User
 
-import unittest
-import os
-import MySQLdb
-from datetime import datetime
-from your_storage_module import DBStorage
-from your_user_module import User
-
 class TestDBStorage(unittest.TestCase):
 
     def setUp(self):
