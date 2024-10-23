@@ -5,12 +5,6 @@ from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
-from models.user import User
-from models.state import State
-from models.city import City
-from models.place import Place
-from models.amenity import Amenity
-from models.review import Review
 
 
 class DBStorage:
@@ -20,34 +14,26 @@ class DBStorage:
 
     def __init__(self):
         """Constructor for DBStorage"""
+        user = getenv("HBNB_MYSQL_USER")
+        password = getenv("HBNB_MYSQL_PWD")
+        host = getenv("HBNB_MYSQL_HOST")
+        db = getenv("HBNB_MYSQL_DB")
         self.__engine = create_engine(
-            'mysql+mysqldb://{}:{}@{}/{}'.format(
-                getenv('HBNB_MYSQL_USER'),
-                getenv('HBNB_MYSQL_PWD'),
-                getenv('HBNB_MYSQL_HOST'),
-                getenv('HBNB_MYSQL_DB')
-            ),
-            pool_pre_ping=True
-        )
-        if getenv('HBNB_ENV') == 'test':
+            f"mysql+mysqldb://{user}:{password}@{host}/{db}",
+            pool_pre_ping=True)
+
+        if getenv("HBNB_ENV") == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
-        from models import classes
-        objs = {}
         if cls:
-            if isinstance(cls, str):
-                cls = classes[cls]
-            for obj in self.__session.query(cls):
-                key = f"{obj.__class__.__name__}.{obj.id}"
-                objs[key] = obj
+            return {f'cls.__name__.{obj.id}': obj for obj in self.__session.query(cls).all()}
         else:
-            for name, cls in classes.items():
-                for obj in self.__session.query(cls):
-                    key = f"{obj.__class__.__name__}.{obj.id}"
-                    objs[key] = obj
-        return objs
+            result = {}
+            for cls in [User, State, City, Place, Review, Amenity]:
+                result.update({f'{cls.__name__}.{obj.id}': obj for obj in self.__session.query(cls).all()})
+            return result
 
     def new(self, obj):
         """Adds new object to storage"""
@@ -64,12 +50,8 @@ class DBStorage:
 
     def reload(self):
         """Reloads storage from database"""
+        from models.state import State
+        from models.city import City
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine,
-                                       expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
-        self.__session = Session()
-
-    def close(self):
-        """Calls remove() on the private session attribute"""
-        self.__session.close()
