@@ -5,6 +5,12 @@ from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
 
 
 class DBStorage:
@@ -14,7 +20,7 @@ class DBStorage:
 
     def __init__(self):
         """Constructor for DBStorage"""
-        user = getenv("HBNB_MYSQL_USER")
+        user = getenv("HBNB_MYSQL_USER" )
         password = getenv("HBNB_MYSQL_PWD")
         host = getenv("HBNB_MYSQL_HOST")
         db = getenv("HBNB_MYSQL_DB")
@@ -50,8 +56,13 @@ class DBStorage:
 
     def reload(self):
         """Reloads storage from database"""
+        from models.user import User
         from models.state import State
         from models.city import City
+        from models.place import Place
+        from models.review import Review
+        from models.amenity import Amenity
+        
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
