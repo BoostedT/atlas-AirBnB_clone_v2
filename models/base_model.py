@@ -59,4 +59,6 @@ class BaseModel:
         dictionary['__class__'] = self.__class__.__name__
         dictionary['created_at'] = self.created_at.isoformat() if isinstance(self.created_at, datetime) else self.created_at
         dictionary['updated_at'] = self.updated_at.isoformat() if isinstance(self.updated_at, datetime) else self.updated_at
+        if '_sa_instance_state' in dictionary:
+            del dictionary['_sa_instance_state']
         return dictionary
