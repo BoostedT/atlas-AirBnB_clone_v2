@@ -54,9 +54,9 @@ class BaseModel:
         storage.save()
 
     def to_dict(self):
-        """Convert instance into dict format"""
+        """Returns a dictionary containing all keys/values of the instance"""
         dictionary = self.__dict__.copy()
-        if '_sa_instance_state' in dictionary:
-            del dictionary['_sa_instance_state']
         dictionary['__class__'] = self.__class__.__name__
+        dictionary['created_at'] = self.created_at.isoformat() if isinstance(self.created_at, datetime) else self.created_at
+        dictionary['updated_at'] = self.updated_at.isoformat() if isinstance(self.updated_at, datetime) else self.updated_at
         return dictionary
