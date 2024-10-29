@@ -120,13 +120,16 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         class_name = args[0]
-        try:
-            new_instance = eval(class_name)()
-        except NameError:
+        if class_name not in self.classes:
             print("** class doesn't exist **")
             return
+    
+        new_instance = self.classes[class_name]()
         for param in args[1:]:
-            key, value = param.split("=", 1)
+            key_value = param.split('=')
+            if len(key_value) != 2:
+                continue
+            key, value = key_value
             if value.startswith('"') and value.endswith('"'):
                 value = value[1:-1].replace('_', ' ').replace('\\"', '"')
             elif '.' in value:
@@ -140,9 +143,10 @@ class HBNBCommand(cmd.Cmd):
                 except ValueError:
                     continue
             setattr(new_instance, key, value)
-
+    
         new_instance.save()
         print(new_instance.id)
+    
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
