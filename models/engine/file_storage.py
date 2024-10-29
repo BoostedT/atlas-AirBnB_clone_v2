@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
-import models
 from models.base_model import BaseModel
+from models.classes import classes
 
 class FileStorage:
     """This class manages storage of hbnb models in JSON format"""
@@ -16,7 +16,7 @@ class FileStorage:
         else:
             filtered_dict = {}
             for key, value in self.__objects.items():
-                if type(value) is cls:
+                if isinstance(value, cls):
                     filtered_dict[key] = value
             return filtered_dict
 
@@ -34,12 +34,13 @@ class FileStorage:
 
     def reload(self):
         """Loads storage dictionary from file"""
+        from models import classes
         try:
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
                     cls_name = val['__class__']
-                    cls = models.classes[cls_name]
+                    cls = classes[cls_name]
                     self.all()[key] = cls(**val)
         except FileNotFoundError:
             pass
