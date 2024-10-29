@@ -123,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
         if class_name not in self.classes:
             print("** class doesn't exist **")
             return
-    
+
         new_instance = self.classes[class_name]()
         for param in args[1:]:
             key_value = param.split('=')
@@ -143,7 +143,7 @@ class HBNBCommand(cmd.Cmd):
                 except ValueError:
                     continue
             setattr(new_instance, key, value)
-    
+
         new_instance.save()
         print(new_instance.id)
     
