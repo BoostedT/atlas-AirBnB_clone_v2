@@ -5,16 +5,16 @@ from models.review import Review
 
 
 class test_review(test_basemodel):
-    """ """
+    """ Method: Create class for review test """
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """ Method: Constructor """
         super().__init__(*args, **kwargs)
         self.name = "Review"
         self.value = Review
 
     def test_place_id(self):
-        """ """
+        """ Method: Verify"""
         new = self.value()
         self.assertEqual(type(new.place_id), str)
 
