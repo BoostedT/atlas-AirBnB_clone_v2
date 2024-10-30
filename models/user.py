@@ -13,5 +13,7 @@ class User(BaseModel):
     password = Column(String(128), nullable=False)
     first_name = Column(String(128), nullable=False)
     last_name = Column(String(128), nullable=False)
+    # when a user object is deleted, all associated place objects will be deleted.
     places = relationship("Place", backref="user", cascade="all, delete")
+    # when a user object is deleted, all associated review objects will be deleted.
     reviews = relationship("Review", backref="user", cascade="all, delete")
