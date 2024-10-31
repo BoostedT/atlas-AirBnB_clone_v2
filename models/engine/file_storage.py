@@ -55,3 +55,6 @@ class FileStorage:
                 del FileStorage.__objects[key]
                 self.save()
                     
+    def close(self):
+        """Calls reload() method"""
+        self.reload()
