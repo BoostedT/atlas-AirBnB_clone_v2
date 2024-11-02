@@ -2,6 +2,7 @@
 """A simple Flask web application to list all State objects"""
 from flask import Flask, render_template
 from models import storage
+from models.state import State
 
 app = Flask(__name__)
 
@@ -9,7 +10,8 @@ app = Flask(__name__)
 def states_list():
     """Display an HTML page with a list of all State objects"""
     states = storage.all(State).values()
-    return render_template('7-states_list.html', states=states)    
+    sorted_states = sorted(states, key=lambda state: state.name)
+    return render_template('7-states_list.html', states=sorted_states)    
 
 @app.teardown_appcontext
 def teardown_db(exception):
