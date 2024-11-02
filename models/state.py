@@ -3,6 +3,8 @@ from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship
 import models
+from models import storage
+from models.city import City
 
 class State(BaseModel, Base):
     """ State class """
@@ -15,7 +17,6 @@ class State(BaseModel, Base):
     @property
     def cities(self):
         """ Getter for cities """
-        if models.storage_type == 'db':
-            return self.cities
-        else:
-            return [city for city in models.storage.all(City).values() if city.state_id == self.id]
+        if storage.__class__.__name__ != 'DBStorage':
+            return [city for city in storage.all(City).values() if city.state_id == self.id]
+        return []
